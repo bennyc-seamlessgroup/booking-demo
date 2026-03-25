@@ -134,11 +134,15 @@ const els = {
   doneBtn: document.getElementById("doneBtn")
 };
 
-  function toggleHeader(show) {
+function toggleHeader(show) {
   const hero = document.getElementById("heroSection");
   if (!hero) return;
 
-  hero.style.display = show ? "block" : "none";
+  if (show) {
+    hero.classList.remove("hidden-hero");
+  } else {
+    hero.classList.add("hidden-hero");
+  }
 }
 
 function itemName(item) {
