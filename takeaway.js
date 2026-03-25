@@ -134,6 +134,13 @@ const els = {
   doneBtn: document.getElementById("doneBtn")
 };
 
+  function toggleHeader(show) {
+  const hero = document.getElementById("heroSection");
+  if (!hero) return;
+
+  hero.style.display = show ? "block" : "none";
+}
+
 function itemName(item) {
   return currentLang === "zh" ? item.name_zh : item.name_en;
 }
@@ -198,13 +205,6 @@ function renderHeader() {
     els.desc.textContent = "";
     return;
   }
-
-  function toggleHeader(show) {
-  const hero = document.getElementById("heroSection");
-  if (!hero) return;
-
-  hero.style.display = show ? "block" : "none";
-}
 
   els.name.textContent =
     currentLang === "zh"
