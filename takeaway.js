@@ -384,13 +384,48 @@ els.backToMenuBtn.addEventListener("click", () => {
   showScreen("menu");
 });
 
-els.payBtn.addEventListener("click", () => {
+els.payBtn.addEventListener("click", async () => {
   showScreen("paying");
+
+  const orderItems = menu
+    .filter(item => (cart[item.id] || 0) > 0)
+    .map(item => ({
+      name: itemName(item),
+      qty: cart[item.id],
+      price: item.price
+    }));
+
+  const total = getTotal();
+
+  const pickupNumber = generatePickupNumber();
+
+  try {
+    await fetch("https://YOUR_N8N_URL/webhook/takeaway-submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        phone,
+        restaurant_name:
+          currentLang === "zh"
+            ? restaurant.name
+            : (restaurant.en_name || restaurant.name),
+        items: orderItems,
+        total,
+        pickup_number: pickupNumber,
+        lang: currentLang
+      })
+    });
+  } catch (e) {
+    console.log("Webhook error", e);
+  }
 
   setTimeout(() => {
     renderSuccessScreen();
+    document.getElementById("pickupNumberValue").innerText = pickupNumber;
     showScreen("success");
-  }, 2200);
+  }, 1500);
 });
 
 els.doneBtn.addEventListener("click", () => {
