@@ -144,7 +144,7 @@ window.RESTAURANTS = [
     desc: "濃厚湯底拉麵，宵夜一流。",
     desc_en: "Rich ramen broth, great for late-night meals.",
     map: "https://maps.google.com/?q=22.2890,114.1905",
-    image_url: "https://images.unsplash.com/photo-1604908812830-06c8f6cbb8b3",
+    image_url: "https://images.unsplash.com/photo-1557872943-16a5ac26437e?q=80&w=1200&auto=format&fit=crop",
     lat: 22.289,
     lng: 114.1905
   },
