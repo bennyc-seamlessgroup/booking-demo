@@ -325,3 +325,258 @@ textarea:focus {
 @keyframes spin {
   100% { transform: rotate(360deg); }
 }
+
+.hidden {
+  display: none !important;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.center-screen {
+  text-align: center;
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+
+.menu-list {
+  display: grid;
+  gap: 14px;
+}
+
+.menu-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.menu-card-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.menu-card-title {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.menu-card-desc {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.menu-card-price {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.qty-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 10px;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.qty-number {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.sticky-action {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  background: rgba(245, 247, 251, 0.92);
+  backdrop-filter: blur(8px);
+  padding: 10px;
+  border-radius: 18px;
+}
+
+.sticky-summary {
+  flex: 1;
+}
+
+.secondary-btn {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--text);
+  padding: 15px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cart-list {
+  display: grid;
+  gap: 12px;
+}
+
+.cart-item-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cart-item-name {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.cart-item-qty {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.summary-card {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.summary-row:last-child {
+  margin-bottom: 0;
+}
+
+.total-row {
+  font-weight: 800;
+  font-size: 17px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.cart-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.applepay-logo {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.paying-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.paying-amount {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.large-loader {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto;
+}
+
+.loader {
+  border: 4px solid #eee;
+  border-top: 4px solid black;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.success-icon {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  margin: 0 auto 10px;
+  background: #ecfdf5;
+  border-radius: 999px;
+}
+
+.success-info {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.success-info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.success-order-block {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #f9fafb;
+  border: 1px solid var(--border);
+}
+
+.success-restaurant-name {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.success-order-items {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.empty-cart {
+  color: var(--muted);
+  text-align: center;
+  padding: 20px 0;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 640px) {
+  .cart-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}
