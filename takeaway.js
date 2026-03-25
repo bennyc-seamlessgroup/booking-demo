@@ -399,7 +399,7 @@ els.payBtn.addEventListener("click", async () => {
   const pickupNumber = generatePickupNumber();
 
   // 先開始送 webhook，但唔好阻塞 UI
-  const webhookPromise = fetch("https://YOUR_REAL_N8N_DOMAIN/webhook/takeaway-submit", {
+  const webhookPromise = fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/takeaway-submit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
