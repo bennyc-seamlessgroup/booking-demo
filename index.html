@@ -1,116 +1,451 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Booking</title>
-</head>
-
-<body style="font-family: Arial; padding: 20px;">
-
-  <h1 id="name">Loading...</h1>
-  <p id="info"></p>
-
-  <h2>Book a Table</h2>
-
-  <form id="form">
-    <label>Date</label><br/>
-    <input type="date" required /><br/><br/>
-
-    <label>Time</label><br/>
-    <input type="time" required /><br/><br/>
-
-    <label>People</label><br/>
-    <input type="number" min="1" required /><br/><br/>
-
-    <label>Name</label><br/>
-    <input type="text" required /><br/><br/>
-
-    <button type="submit">Submit</button>
-  </form>
-
-  <p id="result" style="color:green;margin-top:20px;"></p>
-
-<script>
-
-// dummy data
-const data = {
-  CB01: {
-    name: "Ho Hung Kee",
-    area: "Causeway Bay",
-    cuisine: "Cantonese"
-  },
-  FH01: {
-    name: "Fisholic",
-    area: "Fortress Hill",
-    cuisine: "Fusion"
-  }
-};
-
-// 讀 URL
-const params = new URLSearchParams(window.location.search);
-
-const rid = params.get("rid");
-const phone = params.get("phone"); // 🔥 關鍵
-
-const r = data[rid];
-
-// 顯示餐廳
-if (r) {
-  document.getElementById("name").innerText = r.name;
-  document.getElementById("info").innerText =
-    `${r.area} | ${r.cuisine}`;
-} else {
-  document.getElementById("name").innerText = "Restaurant not found";
-}
-
-// submit
-document.getElementById("form").addEventListener("submit", async function(e) {
-  e.preventDefault();
-
-  const inputs = this.querySelectorAll("input");
-
-  const payload = {
-    restaurant_id: rid,
-    restaurant_name: r?.name || "",
-    area: r?.area || "",
-    cuisine: r?.cuisine || "",
-
-    booking_date: inputs[0].value,
-    booking_time: inputs[1].value,
-    party_size: inputs[2].value,
-    customer_name: inputs[3].value,
-
-    // 🔥 用 WhatsApp phone
-    customer_phone: phone
-  };
-
-  try {
-    const res = await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/booking-submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const result = await res.json();
-
-    if (result.success) {
-      document.getElementById("result").innerText =
-        "Booking confirmed!";
-    } else {
-      document.getElementById("result").innerText =
-        "Failed.";
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Booking</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #111827;
+      --primary-hover: #000000;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+      --radius: 18px;
     }
 
-  } catch (err) {
-    document.getElementById("result").innerText =
-      "Error.";
-    console.error(err);
-  }
-});
+    * {
+      box-sizing: border-box;
+    }
 
-</script>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
 
+    body {
+      min-height: 100vh;
+    }
+
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      background: #ddd;
+    }
+
+    .hero-content {
+      padding: 18px 18px 20px;
+    }
+
+    .eyebrow {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .restaurant-name {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .restaurant-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      color: #374151;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .restaurant-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      margin: 0 0 6px;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.half {
+      grid-column: span 1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 14px;
+      padding: 14px 14px;
+      font-size: 16px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.06);
+    }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 16px;
+      padding: 15px 18px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
+      margin-top: 8px;
+    }
+
+    .submit-btn:hover {
+      background: var(--primary-hover);
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .result {
+      display: none;
+      margin-top: 16px;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .result.success {
+      display: block;
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid #a7f3d0;
+    }
+
+    .result.error {
+      display: block;
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .footer-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .loading {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .page {
+        padding: 28px 20px 48px;
+      }
+
+      .hero-content {
+        padding: 22px 22px 24px;
+      }
+
+      .card {
+        padding: 24px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field.full {
+        grid-column: 1 / -1;
+      }
+
+      .field.half {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <img id="restaurantImage" class="hero-image" src="" alt="Restaurant image" />
+      <div class="hero-content">
+        <div class="eyebrow">Restaurant Booking</div>
+        <h1 id="restaurantName" class="restaurant-name">Loading...</h1>
+        <div class="restaurant-meta">
+          <span id="restaurantArea" class="chip">Loading area</span>
+          <span id="restaurantCuisine" class="chip">Loading cuisine</span>
+          <span id="restaurantPrice" class="chip">Loading price</span>
+        </div>
+        <p id="restaurantDesc" class="restaurant-desc loading">Loading restaurant details...</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">Book a table</h2>
+      <p class="section-subtitle">Choose your preferred date, time, and party size. This booking form is a demo for now.</p>
+
+      <form id="bookingForm">
+        <div class="form-grid">
+          <div class="field half">
+            <label for="bookingDate">Date</label>
+            <input id="bookingDate" type="date" required />
+          </div>
+
+          <div class="field half">
+            <label for="bookingTime">Time</label>
+            <select id="bookingTime" required>
+              <option value="">Select time</option>
+              <option>12:00</option>
+              <option>12:30</option>
+              <option>13:00</option>
+              <option>18:00</option>
+              <option>18:30</option>
+              <option>19:00</option>
+              <option>19:30</option>
+              <option>20:00</option>
+              <option>20:30</option>
+              <option>21:00</option>
+            </select>
+          </div>
+
+          <div class="field half">
+            <label for="partySize">Party size</label>
+            <select id="partySize" required>
+              <option value="">Select party size</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>8</option>
+              <option>10</option>
+            </select>
+          </div>
+
+          <div class="field half">
+            <label for="customerName">Your name</label>
+            <input id="customerName" type="text" placeholder="Enter your name" required />
+          </div>
+
+          <div class="field full">
+            <label for="note">Special request</label>
+            <textarea id="note" placeholder="Optional: birthday, window seat, dietary request..."></textarea>
+          </div>
+
+          <div class="field full">
+            <button id="submitBtn" class="submit-btn" type="submit">Submit booking</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="resultBox" class="result"></div>
+      <div class="footer-note">Demo booking form — you can connect this to your backend workflow later.</div>
+    </section>
+  </div>
+
+  <script>
+    const restaurants = {
+      CB01: {
+        name: "何洪記",
+        en_name: "Ho Hung Kee",
+        area: "銅鑼灣",
+        area_en: "Causeway Bay",
+        cuisine: "粵菜",
+        cuisine_en: "Cantonese",
+        price: "$$$",
+        desc: "米芝蓮推薦粵菜，雲吞麵同燒味都非常出色。",
+        desc_en: "Michelin-recommended Cantonese restaurant famous for wonton noodles and roast meats.",
+        image_url: "https://images.unsplash.com/photo-1585032226651-759b368d7246"
+      },
+      FH01: {
+        name: "魚事者",
+        en_name: "Fisholic",
+        area: "炮台山",
+        area_en: "Fortress Hill",
+        cuisine: "創意料理",
+        cuisine_en: "Fusion",
+        price: "$",
+        desc: "創意魚麵食法多樣，米芝蓮推薦的平民創意料理。",
+        desc_en: "Creative fish noodle dishes with Michelin recognition.",
+        image_url: "https://images.unsplash.com/photo-1555126634-323283e090fa"
+      }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const rid = params.get("rid");
+    const phone = params.get("phone");
+
+    const restaurant = restaurants[rid];
+
+    const restaurantName = document.getElementById("restaurantName");
+    const restaurantArea = document.getElementById("restaurantArea");
+    const restaurantCuisine = document.getElementById("restaurantCuisine");
+    const restaurantPrice = document.getElementById("restaurantPrice");
+    const restaurantDesc = document.getElementById("restaurantDesc");
+    const restaurantImage = document.getElementById("restaurantImage");
+
+    if (restaurant) {
+      restaurantName.textContent = `${restaurant.name} / ${restaurant.en_name}`;
+      restaurantArea.textContent = restaurant.area_en || restaurant.area;
+      restaurantCuisine.textContent = restaurant.cuisine_en || restaurant.cuisine;
+      restaurantPrice.textContent = restaurant.price || "";
+      restaurantDesc.textContent = restaurant.desc_en || restaurant.desc || "";
+      restaurantDesc.classList.remove("loading");
+      restaurantImage.src = restaurant.image_url || "";
+    } else {
+      restaurantName.textContent = "Restaurant not found";
+      restaurantArea.textContent = "Unknown";
+      restaurantCuisine.textContent = "Unknown";
+      restaurantPrice.textContent = "";
+      restaurantDesc.textContent = "We can't find the selected restaurant.";
+      restaurantDesc.classList.remove("loading");
+      restaurantImage.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4";
+    }
+
+    const form = document.getElementById("bookingForm");
+    const resultBox = document.getElementById("resultBox");
+    const submitBtn = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      resultBox.className = "result";
+      resultBox.textContent = "";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+
+      const payload = {
+        restaurant_id: rid || "",
+        restaurant_name: restaurant?.en_name || restaurant?.name || "",
+        area: restaurant?.area_en || restaurant?.area || "",
+        cuisine: restaurant?.cuisine_en || restaurant?.cuisine || "",
+        booking_date: document.getElementById("bookingDate").value,
+        booking_time: document.getElementById("bookingTime").value,
+        party_size: document.getElementById("partySize").value,
+        customer_name: document.getElementById("customerName").value,
+        note: document.getElementById("note").value,
+        customer_phone: phone || ""
+      };
+
+      try {
+        const res = await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/booking-submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          resultBox.className = "result success";
+          resultBox.textContent = "Booking submitted successfully.";
+          form.reset();
+        } else {
+          resultBox.className = "result error";
+          resultBox.textContent = "Booking failed. Please try again.";
+        }
+      } catch (err) {
+        resultBox.className = "result error";
+        resultBox.textContent = "Something went wrong while submitting your booking.";
+        console.error(err);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit booking";
+      }
+    });
+  </script>
 </body>
 </html>
