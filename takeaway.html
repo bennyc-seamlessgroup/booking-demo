@@ -8,10 +8,12 @@
 </head>
 <body>
   <div class="page">
+
     <div class="topbar">
       <button id="langToggle" class="lang-toggle">中文</button>
     </div>
 
+    <!-- Restaurant -->
     <section class="hero">
       <img id="img" class="hero-image" />
       <div class="hero-content">
@@ -20,92 +22,50 @@
       </div>
     </section>
 
+    <!-- Menu -->
     <section class="booking-card">
-      <h2 id="title"></h2>
-
-      <div class="form-grid">
-        <div class="field">
-          <label id="labelName"></label>
-          <input id="customerName" />
-        </div>
-
-        <div class="field">
-          <label id="labelTime"></label>
-          <input id="pickupTime" type="time" />
-        </div>
-
-        <div class="field full">
-          <label id="labelNote"></label>
-          <textarea id="note"></textarea>
-        </div>
-      </div>
-
-      <button id="submit" class="submit-btn"></button>
-
-      <div id="result" class="result"></div>
+      <h2 id="menuTitle"></h2>
+      <div id="menuList"></div>
     </section>
+
+    <!-- Cart -->
+    <section class="booking-card">
+      <h2 id="cartTitle"></h2>
+      <div id="cartList"></div>
+
+      <div id="total"></div>
+
+      <button id="checkoutBtn" class="submit-btn"></button>
+    </section>
+
+  </div>
+
+  <!-- Apple Pay Modal -->
+  <div id="paymentModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="applepay-header"> Pay</div>
+      <div id="paymentAmount"></div>
+      <button id="payNow" class="submit-btn">Pay</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading" class="modal hidden">
+    <div class="modal-content">
+      <div class="loader"></div>
+      <p>Processing payment...</p>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div id="success" class="modal hidden">
+    <div class="modal-content">
+      <h2>✅ Payment Successful</h2>
+      <p>Your order is confirmed.</p>
+    </div>
   </div>
 
   <script src="./restaurants.js"></script>
-  <script>
-    const p = new URLSearchParams(location.search);
-    const rid = p.get("rid");
-    const lang = p.get("lang") === "zh" ? "zh" : "en";
-    const phone = p.get("phone") || "";
-
-    const r = window.RESTAURANTS.find(x => x.id === rid);
-    const isZh = lang === "zh";
-
-    document.getElementById("name").innerText =
-      isZh ? r.name : r.en_name;
-
-    document.getElementById("desc").innerText =
-      isZh ? r.desc : r.desc_en;
-
-    document.getElementById("img").src = r.image_url;
-
-    document.getElementById("title").innerText =
-      isZh ? "外賣下單" : "Place Takeaway Order";
-
-    document.getElementById("labelName").innerText =
-      isZh ? "你的姓名" : "Your name";
-
-    document.getElementById("labelTime").innerText =
-      isZh ? "取餐時間" : "Pickup time";
-
-    document.getElementById("labelNote").innerText =
-      isZh ? "備註" : "Note";
-
-    document.getElementById("submit").innerText =
-      isZh ? "提交外賣" : "Submit Order";
-
-    document.getElementById("submit").onclick = async () => {
-      const payload = {
-        restaurant_id: rid,
-        restaurant_name: r.name,
-        customer_name: document.getElementById("customerName").value,
-        pickup_time: document.getElementById("pickupTime").value,
-        note: document.getElementById("note").value,
-        customer_phone: phone,
-        type: "takeaway",
-        language: lang
-      };
-
-      await fetch("YOUR_WEBHOOK_URL", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      document.getElementById("result").className = "result success";
-      document.getElementById("result").innerText =
-        isZh ? "已提交外賣訂單" : "Order submitted";
-    };
-
-    document.getElementById("langToggle").onclick = () => {
-      const newLang = lang === "zh" ? "en" : "zh";
-      location.search = `?rid=${rid}&phone=${phone}&lang=${newLang}`;
-    };
-  </script>
+  <script src="./takeaway.js"></script>
 </body>
 </html>
