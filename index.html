@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Restaurant Booking</title>
+</head>
+<body style="font-family: Arial; padding: 20px;">
+
+  <h1 id="name">Loading...</h1>
+  <p id="info"></p>
+
+  <h2>Book a Table</h2>
+
+  <form id="form">
+    <label>Date:</label><br/>
+    <input type="date" required /><br/><br/>
+
+    <label>Time:</label><br/>
+    <input type="time" required /><br/><br/>
+
+    <label>People:</label><br/>
+    <input type="number" min="1" required /><br/><br/>
+
+    <label>Name:</label><br/>
+    <input type="text" required /><br/><br/>
+
+    <label>Phone:</label><br/>
+    <input type="text" required /><br/><br/>
+
+    <button type="submit">Submit Booking</button>
+  </form>
+
+  <p id="result" style="margin-top:20px;color:green;"></p>
+
+  <script>
+    // 🔥 dummy data（你可以之後換 API）
+    const data = {
+      CB01: {
+        name: "Ho Hung Kee",
+        area: "Causeway Bay",
+        cuisine: "Cantonese"
+      },
+      FH01: {
+        name: "Fisholic",
+        area: "Fortress Hill",
+        cuisine: "Fusion"
+      }
+    };
+
+    // 讀 rid
+    const params = new URLSearchParams(window.location.search);
+    const rid = params.get("rid");
+
+    const r = data[rid];
+
+    if (r) {
+      document.getElementById("name").innerText = r.name;
+      document.getElementById("info").innerText =
+        `${r.area} | ${r.cuisine}`;
+    } else {
+      document.getElementById("name").innerText = "Restaurant not found";
+    }
+
+    // submit
+    document.getElementById("form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      document.getElementById("result").innerText =
+        "Booking submitted (demo only)";
+    });
+  </script>
+
+</body>
+</html>
