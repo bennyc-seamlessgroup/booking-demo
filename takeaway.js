@@ -396,36 +396,49 @@ els.payBtn.addEventListener("click", async () => {
     }));
 
   const total = getTotal();
-
   const pickupNumber = generatePickupNumber();
 
-  try {
-    await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/takeaway-submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        phone,
-        restaurant_name:
-          currentLang === "zh"
-            ? restaurant.name
-            : (restaurant.en_name || restaurant.name),
-        items: orderItems,
-        total,
-        pickup_number: pickupNumber,
-        lang: currentLang
-      })
+  // 先開始送 webhook，但唔好阻塞 UI
+  const webhookPromise = fetch("https://YOUR_REAL_N8N_DOMAIN/webhook/takeaway-submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      phone,
+      restaurant_name:
+        currentLang === "zh"
+          ? restaurant.name
+          : (restaurant.en_name || restaurant.name),
+      items: orderItems,
+      total,
+      pickup_number: pickupNumber,
+      lang: currentLang
+    })
+  })
+    .then(async (res) => {
+      try {
+        return await res.json();
+      } catch (e) {
+        return null;
+      }
+    })
+    .then((result) => {
+      console.log("takeaway webhook result:", result);
+    })
+    .catch((e) => {
+      console.log("Webhook error", e);
     });
-  } catch (e) {
-    console.log("Webhook error", e);
-  }
 
+  // UI 固定 1.5 秒後進入成功頁，不等 webhook
   setTimeout(() => {
     renderSuccessScreen();
     document.getElementById("pickupNumberValue").innerText = pickupNumber;
     showScreen("success");
   }, 1500);
+
+  // 背景等 webhook 完成
+  webhookPromise;
 });
 
 els.doneBtn.addEventListener("click", () => {
