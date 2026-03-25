@@ -32,7 +32,29 @@ document.addEventListener("DOMContentLoaded", () => {
       areaFallback: "Unknown area",
       cuisineFallback: "Unknown cuisine",
       emptyCart: "Your cart is empty.",
-      notFound: "Restaurant not found"
+      notFound: "Restaurant not found",
+      categories: {
+        burger: "Burgers",
+        side: "Sides",
+        drinks: "Drinks",
+        ramen: "Ramen",
+        noodles: "Noodles",
+        rice: "Rice",
+        dimsum: "Dim Sum",
+        pizza: "Pizza",
+        pasta: "Pasta",
+        salad: "Salads",
+        main: "Main",
+        dessert: "Dessert",
+        starter: "Starters",
+        smoothie: "Smoothies",
+        snack: "Snacks",
+        wrap: "Wraps",
+        bowl: "Bowls",
+        bbq: "BBQ",
+        mexican: "Mexican",
+        other: "Others"
+      }
     },
     zh: {
       htmlLang: "zh-Hant",
@@ -59,26 +81,46 @@ document.addEventListener("DOMContentLoaded", () => {
       areaFallback: "未知地區",
       cuisineFallback: "未知菜式",
       emptyCart: "你的購物車是空的。",
-      notFound: "找不到餐廳"
+      notFound: "找不到餐廳",
+      categories: {
+        burger: "漢堡",
+        side: "小食",
+        drinks: "飲品",
+        ramen: "拉麵",
+        noodles: "麵類",
+        rice: "飯類",
+        dimsum: "點心",
+        pizza: "薄餅",
+        pasta: "意粉",
+        salad: "沙律",
+        main: "主食",
+        dessert: "甜品",
+        starter: "前菜",
+        smoothie: "奶昔",
+        snack: "小吃",
+        wrap: "卷餅",
+        bowl: "飯碗",
+        bbq: "燒烤",
+        mexican: "墨西哥菜",
+        other: "其他"
+      }
     }
   };
 
-  const MENUS = {
-    MK02: [
-      { id: "m1", name_zh: "招牌牛肉漢堡", name_en: "Signature Beef Burger", price: 68, desc_zh: "厚切牛肉配薯條", desc_en: "Juicy beef burger with fries" },
-      { id: "m2", name_zh: "雙層芝士漢堡", name_en: "Double Cheeseburger", price: 78, desc_zh: "雙層牛肉加濃厚芝士", desc_en: "Double beef patties with rich cheese" },
-      { id: "m3", name_zh: "炸雞漢堡", name_en: "Crispy Chicken Burger", price: 64, desc_zh: "香脆雞扒配生菜", desc_en: "Crispy chicken fillet with lettuce" },
-      { id: "m4", name_zh: "薯條", name_en: "Fries", price: 28, desc_zh: "即炸香脆薯條", desc_en: "Freshly fried crispy fries" }
-    ]
-  };
-
   const DEFAULT_MENU = [
-    { id: "d1", name_zh: "雲吞麵", name_en: "Wonton Noodles", price: 60, desc_zh: "招牌人氣之選", desc_en: "A signature favorite" },
-    { id: "d2", name_zh: "叉燒飯", name_en: "BBQ Pork Rice", price: 75, desc_zh: "經典港式燒味", desc_en: "Classic Hong Kong BBQ rice" },
-    { id: "d3", name_zh: "點心拼盤", name_en: "Dim Sum Set", price: 90, desc_zh: "人氣點心組合", desc_en: "Popular dim sum combo" }
+    {
+      id: "default_1",
+      category: "main",
+      name_zh: "招牌套餐",
+      name_en: "Signature Set",
+      price: 68,
+      desc_zh: "餐廳精選套餐。",
+      desc_en: "Chef's signature set.",
+      image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop"
+    }
   ];
 
-  const menu = MENUS[rid] || DEFAULT_MENU;
+  const menu = (window.MENUS && window.MENUS[rid]) ? window.MENUS[rid] : DEFAULT_MENU;
   const packagingFee = 5;
   const cart = {};
 
@@ -228,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ? (restaurant.desc || restaurant.desc_en || "")
         : (restaurant.desc_en || restaurant.desc || "");
 
-    els.img.src = restaurant.image_url || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4";
+    els.img.src = restaurant.image_url || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop";
   }
 
   function renderMenu() {
@@ -239,24 +281,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
     els.menuList.innerHTML = "";
 
-    menu.forEach(item => {
-      const qty = cart[item.id] || 0;
+    const grouped = {};
 
-      const row = document.createElement("div");
-      row.className = "menu-card";
-      row.innerHTML = `
-        <div class="menu-card-main">
-          <div class="menu-card-title">${itemName(item)}</div>
-          <div class="menu-card-desc">${itemDesc(item)}</div>
-          <div class="menu-card-price">${formatCurrency(item.price)}</div>
-        </div>
-        <div class="qty-control">
-          <button type="button" class="qty-btn" data-action="minus" data-id="${item.id}">−</button>
-          <div class="qty-number" id="qty-${item.id}">${qty}</div>
-          <button type="button" class="qty-btn" data-action="plus" data-id="${item.id}">+</button>
-        </div>
-      `;
-      els.menuList.appendChild(row);
+    menu.forEach(item => {
+      const cat = item.category || "other";
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(item);
+    });
+
+    Object.keys(grouped).forEach(category => {
+      const section = document.createElement("div");
+      section.className = "menu-section";
+
+      const title = document.createElement("div");
+      title.className = "menu-section-title";
+      title.textContent = t.categories?.[category] || category;
+
+      section.appendChild(title);
+
+      grouped[category].forEach(item => {
+        const qty = cart[item.id] || 0;
+
+        const row = document.createElement("div");
+        row.className = "menu-card";
+        row.innerHTML = `
+          <div class="menu-card-main">
+            <div class="menu-card-title">${itemName(item)}</div>
+            <div class="menu-card-desc">${itemDesc(item)}</div>
+            <div class="menu-card-price">${formatCurrency(item.price)}</div>
+          </div>
+          <div class="qty-control">
+            <button type="button" class="qty-btn" data-action="minus" data-id="${item.id}">−</button>
+            <div class="qty-number" id="qty-${item.id}">${qty}</div>
+            <button type="button" class="qty-btn" data-action="plus" data-id="${item.id}">+</button>
+          </div>
+        `;
+
+        section.appendChild(row);
+      });
+
+      els.menuList.appendChild(section);
     });
 
     els.menuList.querySelectorAll(".qty-btn").forEach(btn => {
@@ -382,6 +446,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   els.payBtn.addEventListener("click", () => {
+    if (!phone) {
+      alert(
+        currentLang === "zh"
+          ? "缺少電話資料，請從 WhatsApp 連結重新打開。"
+          : "Missing phone info. Please reopen this page from the WhatsApp link."
+      );
+      showScreen("cart");
+      return;
+    }
+
     showScreen("paying");
 
     const orderItems = menu
@@ -395,7 +469,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = getTotal();
     const pickupNumber = generatePickupNumber();
 
-    // 背景送 webhook，不阻塞 UI
     fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/takeaway-submit", {
       method: "POST",
       headers: {
