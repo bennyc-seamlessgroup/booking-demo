@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Restaurant Booking</title>
   <style>
     :root {
-      --bg: #f6f7fb;
+      --bg: #f5f7fb;
       --card: #ffffff;
-      --text: #1f2937;
+      --text: #111827;
       --muted: #6b7280;
       --border: #e5e7eb;
       --primary: #111827;
       --primary-hover: #000000;
       --success-bg: #ecfdf5;
       --success-text: #065f46;
+      --error-bg: #fef2f2;
+      --error-text: #991b1b;
       --shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
-      --radius: 18px;
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
     }
 
     * {
@@ -27,65 +31,72 @@
       margin: 0;
       padding: 0;
       font-family: Inter, Arial, sans-serif;
-      background: var(--bg);
+      background: linear-gradient(180deg, #f8fafc 0%, #f3f4f6 100%);
       color: var(--text);
     }
 
     body {
       min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     .page {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: 20px 16px 40px;
     }
 
     .hero {
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
+      border: 1px solid rgba(229, 231, 235, 0.8);
+      border-radius: var(--radius-xl);
       overflow: hidden;
       box-shadow: var(--shadow);
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
 
     .hero-image {
       width: 100%;
-      height: 220px;
+      height: 230px;
       object-fit: cover;
       display: block;
-      background: #ddd;
+      background: #d1d5db;
     }
 
     .hero-content {
-      padding: 18px 18px 20px;
+      padding: 18px;
     }
 
     .eyebrow {
-      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .restaurant-name {
       margin: 0 0 10px;
       font-size: 30px;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
     }
 
-    .restaurant-meta {
+    .meta-row {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .chip {
       display: inline-flex;
       align-items: center;
-      padding: 7px 10px;
+      padding: 8px 11px;
       border-radius: 999px;
       background: #f3f4f6;
       color: #374151;
@@ -100,10 +111,10 @@
       font-size: 15px;
     }
 
-    .card {
+    .booking-card {
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
+      border: 1px solid rgba(229, 231, 235, 0.8);
+      border-radius: var(--radius-xl);
       padding: 20px;
       box-shadow: var(--shadow);
     }
@@ -115,7 +126,7 @@
     }
 
     .section-subtitle {
-      margin: 0 0 20px;
+      margin: 0 0 18px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.5;
@@ -125,29 +136,31 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 14px;
+      min-width: 0;
     }
 
     .field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .field.half {
-      grid-column: span 1;
+      min-width: 0;
     }
 
     label {
+      display: block;
+      margin-bottom: 8px;
       font-size: 14px;
       font-weight: 700;
       color: #374151;
     }
 
-    input, select, textarea {
+    input,
+    select,
+    textarea {
+      display: block;
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
       border: 1px solid var(--border);
+      border-radius: var(--radius-md);
       background: #fff;
-      border-radius: 14px;
       padding: 14px 14px;
       font-size: 16px;
       color: var(--text);
@@ -155,28 +168,44 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
+    input[type="date"],
+    input[type="time"],
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 48px;
+    }
+
     textarea {
       min-height: 110px;
       resize: vertical;
     }
 
-    input:focus, select:focus, textarea:focus {
+    input:focus,
+    select:focus,
+    textarea:focus {
       border-color: #9ca3af;
       box-shadow: 0 0 0 4px rgba(17, 24, 39, 0.06);
+    }
+
+    .submit-wrap {
+      margin-top: 18px;
+      position: sticky;
+      bottom: max(12px, env(safe-area-inset-bottom));
     }
 
     .submit-btn {
       width: 100%;
       border: none;
+      border-radius: 16px;
       background: var(--primary);
       color: #fff;
-      border-radius: 16px;
       padding: 15px 18px;
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 10px 22px rgba(17, 24, 39, 0.16);
       transition: transform 0.15s ease, background 0.2s ease, opacity 0.2s ease;
-      margin-top: 8px;
     }
 
     .submit-btn:hover {
@@ -195,8 +224,8 @@
     .result {
       display: none;
       margin-top: 16px;
-      border-radius: 16px;
       padding: 14px 16px;
+      border-radius: 16px;
       font-size: 15px;
       line-height: 1.5;
     }
@@ -210,21 +239,15 @@
 
     .result.error {
       display: block;
-      background: #fef2f2;
-      color: #991b1b;
+      background: var(--error-bg);
+      color: var(--error-text);
       border: 1px solid #fecaca;
     }
 
-    .footer-note {
-      margin-top: 14px;
-      font-size: 13px;
-      color: var(--muted);
+    .not-found {
       text-align: center;
-    }
-
-    .loading {
       color: var(--muted);
-      font-size: 14px;
+      padding: 40px 20px;
     }
 
     @media (min-width: 640px) {
@@ -232,11 +255,8 @@
         padding: 28px 20px 48px;
       }
 
-      .hero-content {
-        padding: 22px 22px 24px;
-      }
-
-      .card {
+      .hero-content,
+      .booking-card {
         padding: 24px;
       }
 
@@ -246,10 +266,6 @@
 
       .field.full {
         grid-column: 1 / -1;
-      }
-
-      .field.half {
-        grid-column: span 1;
       }
     }
   </style>
@@ -261,27 +277,30 @@
       <div class="hero-content">
         <div class="eyebrow">Restaurant Booking</div>
         <h1 id="restaurantName" class="restaurant-name">Loading...</h1>
-        <div class="restaurant-meta">
+
+        <div class="meta-row">
           <span id="restaurantArea" class="chip">Loading area</span>
           <span id="restaurantCuisine" class="chip">Loading cuisine</span>
           <span id="restaurantPrice" class="chip">Loading price</span>
+          <span id="restaurantScore" class="chip">Loading score</span>
         </div>
-        <p id="restaurantDesc" class="restaurant-desc loading">Loading restaurant details...</p>
+
+        <p id="restaurantDesc" class="restaurant-desc">Loading restaurant details...</p>
       </div>
     </section>
 
-    <section class="card">
+    <section class="booking-card">
       <h2 class="section-title">Book a table</h2>
-      <p class="section-subtitle">Choose your preferred date, time, and party size. This booking form is a demo for now.</p>
+      <p class="section-subtitle">Choose your preferred date, time, and party size.</p>
 
       <form id="bookingForm">
         <div class="form-grid">
-          <div class="field half">
+          <div class="field">
             <label for="bookingDate">Date</label>
             <input id="bookingDate" type="date" required />
           </div>
 
-          <div class="field half">
+          <div class="field">
             <label for="bookingTime">Time</label>
             <select id="bookingTime" required>
               <option value="">Select time</option>
@@ -298,7 +317,7 @@
             </select>
           </div>
 
-          <div class="field half">
+          <div class="field">
             <label for="partySize">Party size</label>
             <select id="partySize" required>
               <option value="">Select party size</option>
@@ -313,89 +332,63 @@
             </select>
           </div>
 
-          <div class="field half">
+          <div class="field">
             <label for="customerName">Your name</label>
             <input id="customerName" type="text" placeholder="Enter your name" required />
           </div>
 
           <div class="field full">
             <label for="note">Special request</label>
-            <textarea id="note" placeholder="Optional: birthday, window seat, dietary request..."></textarea>
+            <textarea id="note" placeholder="Optional: birthday, dietary request, seating preference..."></textarea>
           </div>
+        </div>
 
-          <div class="field full">
-            <button id="submitBtn" class="submit-btn" type="submit">Submit booking</button>
-          </div>
+        <div class="submit-wrap">
+          <button id="submitBtn" class="submit-btn" type="submit">Submit booking</button>
         </div>
       </form>
 
       <div id="resultBox" class="result"></div>
-      <div class="footer-note">Demo booking form — you can connect this to your backend workflow later.</div>
     </section>
   </div>
 
+  <script src="./restaurants.js"></script>
   <script>
-    const restaurants = {
-      CB01: {
-        name: "何洪記",
-        en_name: "Ho Hung Kee",
-        area: "銅鑼灣",
-        area_en: "Causeway Bay",
-        cuisine: "粵菜",
-        cuisine_en: "Cantonese",
-        price: "$$$",
-        desc: "米芝蓮推薦粵菜，雲吞麵同燒味都非常出色。",
-        desc_en: "Michelin-recommended Cantonese restaurant famous for wonton noodles and roast meats.",
-        image_url: "https://images.unsplash.com/photo-1585032226651-759b368d7246"
-      },
-      FH01: {
-        name: "魚事者",
-        en_name: "Fisholic",
-        area: "炮台山",
-        area_en: "Fortress Hill",
-        cuisine: "創意料理",
-        cuisine_en: "Fusion",
-        price: "$",
-        desc: "創意魚麵食法多樣，米芝蓮推薦的平民創意料理。",
-        desc_en: "Creative fish noodle dishes with Michelin recognition.",
-        image_url: "https://images.unsplash.com/photo-1555126634-323283e090fa"
-      }
-    };
-
     const params = new URLSearchParams(window.location.search);
     const rid = params.get("rid");
     const phone = params.get("phone");
 
-    const restaurant = restaurants[rid];
+    const restaurant = (window.RESTAURANTS || []).find(r => r.id === rid);
 
     const restaurantName = document.getElementById("restaurantName");
     const restaurantArea = document.getElementById("restaurantArea");
     const restaurantCuisine = document.getElementById("restaurantCuisine");
     const restaurantPrice = document.getElementById("restaurantPrice");
+    const restaurantScore = document.getElementById("restaurantScore");
     const restaurantDesc = document.getElementById("restaurantDesc");
     const restaurantImage = document.getElementById("restaurantImage");
+    const resultBox = document.getElementById("resultBox");
+    const form = document.getElementById("bookingForm");
+    const submitBtn = document.getElementById("submitBtn");
 
     if (restaurant) {
-      restaurantName.textContent = `${restaurant.name} / ${restaurant.en_name}`;
-      restaurantArea.textContent = restaurant.area_en || restaurant.area;
-      restaurantCuisine.textContent = restaurant.cuisine_en || restaurant.cuisine;
+      restaurantName.textContent = `${restaurant.name} / ${restaurant.en_name || restaurant.name}`;
+      restaurantArea.textContent = restaurant.area_en || restaurant.area || "Unknown area";
+      restaurantCuisine.textContent = restaurant.cuisine_en || restaurant.cuisine || "Unknown cuisine";
       restaurantPrice.textContent = restaurant.price || "";
+      restaurantScore.textContent = restaurant.score ? `⭐ ${restaurant.score}/5` : "No score";
       restaurantDesc.textContent = restaurant.desc_en || restaurant.desc || "";
-      restaurantDesc.classList.remove("loading");
-      restaurantImage.src = restaurant.image_url || "";
+      restaurantImage.src = restaurant.image_url || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4";
     } else {
       restaurantName.textContent = "Restaurant not found";
       restaurantArea.textContent = "Unknown";
       restaurantCuisine.textContent = "Unknown";
       restaurantPrice.textContent = "";
+      restaurantScore.textContent = "";
       restaurantDesc.textContent = "We can't find the selected restaurant.";
-      restaurantDesc.classList.remove("loading");
       restaurantImage.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4";
+      form.style.display = "none";
     }
-
-    const form = document.getElementById("bookingForm");
-    const resultBox = document.getElementById("resultBox");
-    const submitBtn = document.getElementById("submitBtn");
 
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
