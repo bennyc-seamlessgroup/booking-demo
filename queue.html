@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Queue</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <button id="langToggle" class="lang-toggle" type="button">中文</button>
+    </div>
+
+    <section id="heroSection" class="hero">
+      <img id="img" class="hero-image" alt="Restaurant image" />
+      <div class="hero-content">
+        <div id="eyebrow" class="eyebrow">Queue Ticket</div>
+        <h1 id="name" class="restaurant-name">Loading...</h1>
+        <div class="meta-row">
+          <span id="area" class="chip"></span>
+          <span id="cuisine" class="chip"></span>
+          <span id="price" class="chip"></span>
+        </div>
+        <p id="desc" class="restaurant-desc"></p>
+      </div>
+    </section>
+
+    <section id="queueScreen" class="booking-card">
+      <h2 id="queueTitle" class="section-title">Join the queue</h2>
+      <p id="queueSubtitle" class="section-subtitle">See the current queue and get a ticket.</p>
+
+      <div class="queue-stats">
+        <div class="queue-stat-card">
+          <div id="currentTicketLabel" class="queue-stat-label">Current serving</div>
+          <div id="currentTicketValue" class="queue-stat-value">A032</div>
+        </div>
+        <div class="queue-stat-card">
+          <div id="waitingGroupsLabel" class="queue-stat-label">Waiting groups</div>
+          <div id="waitingGroupsValue" class="queue-stat-value">8</div>
+        </div>
+        <div class="queue-stat-card">
+          <div id="estimatedWaitLabel" class="queue-stat-label">Estimated wait</div>
+          <div id="estimatedWaitValue" class="queue-stat-value">20 mins</div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label id="queueTypeLabel" for="queueType">Queue type</label>
+          <select id="queueType">
+            <option value="walkin">Walk-in</option>
+            <option value="2p">2 people</option>
+            <option value="4p">4 people</option>
+            <option value="6p">6+ people</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label id="customerNameLabel" for="customerName">Your name</label>
+          <input id="customerName" type="text" placeholder="Enter your name" />
+        </div>
+      </div>
+
+      <div class="queue-notes">
+        <div id="queueNotesTitle" class="queue-notes-title">Queue notes</div>
+        <ul id="queueNotesList" class="queue-notes-list">
+          <li>Please arrive when your number is close.</li>
+          <li>Queue ticket is for demo only.</li>
+          <li>Ticket may expire if you miss your turn.</li>
+        </ul>
+      </div>
+
+      <div class="submit-wrap">
+        <button id="joinQueueBtn" class="submit-btn" type="button">Get Queue Ticket</button>
+      </div>
+    </section>
+
+    <section id="queueSuccessScreen" class="booking-card hidden">
+      <div class="success-icon">🎟️</div>
+      <h2 id="successTitle" class="section-title center-text">Queue ticket confirmed</h2>
+      <p id="successSubtitle" class="section-subtitle center-text">Your queue ticket has been issued.</p>
+
+      <div class="success-info">
+        <div class="success-info-row">
+          <span id="ticketNumberLabel">Ticket number</span>
+          <strong id="ticketNumberValue">A040</strong>
+        </div>
+        <div class="success-info-row">
+          <span id="aheadLabel">Groups ahead</span>
+          <strong id="aheadValue">8</strong>
+        </div>
+        <div class="success-info-row">
+          <span id="queueWaitLabel">Estimated wait</span>
+          <strong id="queueWaitValue">20 mins</strong>
+        </div>
+      </div>
+
+      <div class="success-order-block">
+        <div id="queueRestaurantName" class="success-restaurant-name"></div>
+        <div id="queueTypeSummary" class="success-order-items"></div>
+      </div>
+
+      <div class="cart-actions">
+        <button id="doneBtn" class="submit-btn" type="button">Done</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="./restaurants.js"></script>
+  <script src="./queue.js"></script>
+</body>
+</html>
