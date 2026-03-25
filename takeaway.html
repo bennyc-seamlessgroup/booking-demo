@@ -2,67 +2,112 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Takeaway</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <div class="page">
-
     <div class="topbar">
       <button id="langToggle" class="lang-toggle">中文</button>
     </div>
 
-    <!-- Restaurant -->
+    <!-- Restaurant Header -->
     <section class="hero">
-      <img id="img" class="hero-image" />
+      <img id="img" class="hero-image" alt="Restaurant image" />
       <div class="hero-content">
-        <h1 id="name"></h1>
-        <p id="desc"></p>
+        <div id="eyebrow" class="eyebrow">Takeaway Order</div>
+        <h1 id="name" class="restaurant-name">Loading...</h1>
+        <div class="meta-row">
+          <span id="area" class="chip"></span>
+          <span id="cuisine" class="chip"></span>
+          <span id="price" class="chip"></span>
+        </div>
+        <p id="desc" class="restaurant-desc"></p>
       </div>
     </section>
 
-    <!-- Menu -->
-    <section class="booking-card">
-      <h2 id="menuTitle"></h2>
-      <div id="menuList"></div>
+    <!-- Screen 1: Menu -->
+    <section id="menuScreen" class="booking-card">
+      <h2 id="menuTitle" class="section-title">Menu</h2>
+      <p id="menuSubtitle" class="section-subtitle">Choose your items for takeaway.</p>
+      <div id="menuList" class="menu-list"></div>
+
+      <div class="sticky-action">
+        <div class="sticky-summary">
+          <div id="stickyCount">0 items</div>
+          <div id="stickyTotal">$0</div>
+        </div>
+        <button id="reviewCartBtn" class="submit-btn" type="button">Review Order</button>
+      </div>
     </section>
 
-    <!-- Cart -->
-    <section class="booking-card">
-      <h2 id="cartTitle"></h2>
-      <div id="cartList"></div>
+    <!-- Screen 2: Cart Confirmation -->
+    <section id="cartScreen" class="booking-card hidden">
+      <h2 id="cartTitle" class="section-title">Order Summary</h2>
+      <p id="cartSubtitle" class="section-subtitle">Review your takeaway order before payment.</p>
 
-      <div id="total"></div>
+      <div id="cartList" class="cart-list"></div>
 
-      <button id="checkoutBtn" class="submit-btn"></button>
+      <div class="summary-card">
+        <div class="summary-row">
+          <span id="subtotalLabel">Subtotal</span>
+          <span id="subtotalValue">$0</span>
+        </div>
+        <div class="summary-row">
+          <span id="serviceFeeLabel">Packaging fee</span>
+          <span id="serviceFeeValue">$5</span>
+        </div>
+        <div class="summary-row total-row">
+          <span id="totalLabel">Total</span>
+          <span id="totalValue">$0</span>
+        </div>
+      </div>
+
+      <div class="cart-actions">
+        <button id="backToMenuBtn" class="secondary-btn" type="button">Back</button>
+        <button id="payBtn" class="submit-btn" type="button">Pay with Apple Pay</button>
+      </div>
     </section>
 
-  </div>
+    <!-- Screen 3: Apple Pay Loading -->
+    <section id="payingScreen" class="booking-card hidden center-screen">
+      <div class="applepay-logo"> Pay</div>
+      <div id="payingTitle" class="paying-title">Processing payment...</div>
+      <div id="payingAmount" class="paying-amount">$0</div>
+      <div class="loader large-loader"></div>
+    </section>
 
-  <!-- Apple Pay Modal -->
-  <div id="paymentModal" class="modal hidden">
-    <div class="modal-content">
-      <div class="applepay-header"> Pay</div>
-      <div id="paymentAmount"></div>
-      <button id="payNow" class="submit-btn">Pay</button>
-    </div>
-  </div>
+    <!-- Screen 4: Payment Complete -->
+    <section id="successScreen" class="booking-card hidden">
+      <div class="success-icon">✅</div>
+      <h2 id="successTitle" class="section-title center-text">Payment Complete</h2>
+      <p id="successSubtitle" class="section-subtitle center-text">Your takeaway order is confirmed.</p>
 
-  <!-- Loading -->
-  <div id="loading" class="modal hidden">
-    <div class="modal-content">
-      <div class="loader"></div>
-      <p>Processing payment...</p>
-    </div>
-  </div>
+      <div class="success-info">
+        <div class="success-info-row">
+          <span id="pickupTimeLabel">Pickup time</span>
+          <strong id="pickupTimeValue">15 mins</strong>
+        </div>
+        <div class="success-info-row">
+          <span id="pickupNumberLabel">Pickup number</span>
+          <strong id="pickupNumberValue">A128</strong>
+        </div>
+        <div class="success-info-row">
+          <span id="successTotalLabel">Paid</span>
+          <strong id="successTotalValue">$0</strong>
+        </div>
+      </div>
 
-  <!-- Success -->
-  <div id="success" class="modal hidden">
-    <div class="modal-content">
-      <h2>✅ Payment Successful</h2>
-      <p>Your order is confirmed.</p>
-    </div>
+      <div class="success-order-block">
+        <div id="successRestaurantName" class="success-restaurant-name"></div>
+        <div id="successOrderItems" class="success-order-items"></div>
+      </div>
+
+      <div class="cart-actions">
+        <button id="doneBtn" class="submit-btn" type="button">Done</button>
+      </div>
+    </section>
   </div>
 
   <script src="./restaurants.js"></script>
