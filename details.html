@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Details</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <button id="langToggle" class="lang-toggle">中文</button>
+    </div>
+
+    <section class="hero">
+      <img id="img" class="hero-image" />
+      <div class="hero-content">
+        <h1 id="name"></h1>
+        <div class="meta-row">
+          <span id="area" class="chip"></span>
+          <span id="cuisine" class="chip"></span>
+          <span id="price" class="chip"></span>
+          <span id="score" class="chip"></span>
+        </div>
+        <p id="desc"></p>
+      </div>
+    </section>
+
+    <div class="booking-card">
+      <button id="bookBtn" class="submit-btn"></button>
+      <button id="mapBtn" class="submit-btn" style="margin-top:10px;background:#374151;"></button>
+    </div>
+  </div>
+
+  <script src="./restaurants.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const rid = params.get("rid");
+    const lang = params.get("lang") === "zh" ? "zh" : "en";
+    const phone = params.get("phone") || "";
+
+    const r = window.RESTAURANTS.find(x => x.id === rid);
+
+    if (!r) {
+      document.body.innerHTML = "Restaurant not found";
+    }
+
+    const isZh = lang === "zh";
+
+    document.getElementById("name").innerText =
+      isZh ? r.name : r.en_name;
+
+    document.getElementById("area").innerText =
+      isZh ? r.area : r.area_en;
+
+    document.getElementById("cuisine").innerText =
+      isZh ? r.cuisine : r.cuisine_en;
+
+    document.getElementById("price").innerText = r.price;
+    document.getElementById("score").innerText = "⭐ " + r.score;
+    document.getElementById("desc").innerText =
+      isZh ? r.desc : r.desc_en;
+
+    document.getElementById("img").src = r.image_url;
+
+    document.getElementById("bookBtn").innerText =
+      isZh ? "立即訂位" : "Book Now";
+
+    document.getElementById("mapBtn").innerText =
+      isZh ? "查看地圖" : "View Map";
+
+    document.getElementById("bookBtn").onclick = () => {
+      location.href = `./?rid=${r.id}&phone=${phone}&lang=${lang}`;
+    };
+
+    document.getElementById("mapBtn").onclick = () => {
+      window.open(r.map, "_blank");
+    };
+
+    document.getElementById("langToggle").onclick = () => {
+      const newLang = lang === "zh" ? "en" : "zh";
+      location.search = `?rid=${rid}&phone=${phone}&lang=${newLang}`;
+    };
+  </script>
+</body>
+</html>
