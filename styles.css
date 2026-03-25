@@ -615,3 +615,14 @@ textarea:focus {
 .hidden-hero {
   display: none !important;
 }
+
+.menu-section {
+  margin-bottom: 24px;
+}
+
+.menu-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: #111;
+}
