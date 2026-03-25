@@ -626,3 +626,54 @@ textarea:focus {
   margin: 16px 0 8px;
   color: #111;
 }
+
+.queue-stats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.queue-stat-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #fff;
+  padding: 16px;
+}
+
+.queue-stat-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.queue-stat-value {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.queue-notes {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: #f9fafb;
+}
+
+.queue-notes-title {
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.queue-notes-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .queue-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
