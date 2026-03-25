@@ -2,8 +2,9 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Restaurant Booking</title>
+  <title>Booking</title>
 </head>
+
 <body style="font-family: Arial; padding: 20px;">
 
   <h1 id="name">Loading...</h1>
@@ -12,94 +13,103 @@
   <h2>Book a Table</h2>
 
   <form id="form">
-    <label>Date:</label><br/>
+    <label>Date</label><br/>
     <input type="date" required /><br/><br/>
 
-    <label>Time:</label><br/>
+    <label>Time</label><br/>
     <input type="time" required /><br/><br/>
 
-    <label>People:</label><br/>
+    <label>People</label><br/>
     <input type="number" min="1" required /><br/><br/>
 
-    <label>Name:</label><br/>
+    <label>Name</label><br/>
     <input type="text" required /><br/><br/>
 
-    <label>Phone:</label><br/>
-    <input type="text" required /><br/><br/>
-
-    <button type="submit">Submit Booking</button>
+    <button type="submit">Submit</button>
   </form>
 
-  <p id="result" style="margin-top:20px;color:green;"></p>
+  <p id="result" style="color:green;margin-top:20px;"></p>
 
-  <script>
-  const data = {
-    CB01: {
-      name: "Ho Hung Kee",
-      area: "Causeway Bay",
-      cuisine: "Cantonese"
-    },
-    FH01: {
-      name: "Fisholic",
-      area: "Fortress Hill",
-      cuisine: "Fusion"
-    }
+<script>
+
+// dummy data
+const data = {
+  CB01: {
+    name: "Ho Hung Kee",
+    area: "Causeway Bay",
+    cuisine: "Cantonese"
+  },
+  FH01: {
+    name: "Fisholic",
+    area: "Fortress Hill",
+    cuisine: "Fusion"
+  }
+};
+
+// 讀 URL
+const params = new URLSearchParams(window.location.search);
+
+const rid = params.get("rid");
+const phone = params.get("phone"); // 🔥 關鍵
+
+const r = data[rid];
+
+// 顯示餐廳
+if (r) {
+  document.getElementById("name").innerText = r.name;
+  document.getElementById("info").innerText =
+    `${r.area} | ${r.cuisine}`;
+} else {
+  document.getElementById("name").innerText = "Restaurant not found";
+}
+
+// submit
+document.getElementById("form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const inputs = this.querySelectorAll("input");
+
+  const payload = {
+    restaurant_id: rid,
+    restaurant_name: r?.name || "",
+    area: r?.area || "",
+    cuisine: r?.cuisine || "",
+
+    booking_date: inputs[0].value,
+    booking_time: inputs[1].value,
+    party_size: inputs[2].value,
+    customer_name: inputs[3].value,
+
+    // 🔥 用 WhatsApp phone
+    customer_phone: phone
   };
 
-  const params = new URLSearchParams(window.location.search);
-  const rid = params.get("rid");
+  try {
+    const res = await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/booking-submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
 
-  const r = data[rid];
+    const result = await res.json();
 
-  if (r) {
-    document.getElementById("name").innerText = r.name;
-    document.getElementById("info").innerText =
-      `${r.area} | ${r.cuisine}`;
-  } else {
-    document.getElementById("name").innerText = "Restaurant not found";
-  }
-
-  document.getElementById("form").addEventListener("submit", async function(e) {
-    e.preventDefault();
-
-    const inputs = this.querySelectorAll("input");
-
-    const payload = {
-      restaurant_id: rid,
-      restaurant_name: r ? r.name : "",
-      area: r ? r.area : "",
-      cuisine: r ? r.cuisine : "",
-      booking_date: inputs[0].value,
-      booking_time: inputs[1].value,
-      party_size: inputs[2].value,
-      customer_name: inputs[3].value,
-      customer_phone: inputs[4].value
-    };
-
-    try {
-      const res = await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/booking-submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await res.json();
-
-      if (result.success) {
-        document.getElementById("result").innerText =
-          "Booking submitted successfully!";
-      } else {
-        document.getElementById("result").innerText =
-          "Booking failed.";
-      }
-    } catch (err) {
+    if (result.success) {
       document.getElementById("result").innerText =
-        "Error submitting booking.";
-      console.error(err);
+        "Booking confirmed!";
+    } else {
+      document.getElementById("result").innerText =
+        "Failed.";
     }
-  });
+
+  } catch (err) {
+    document.getElementById("result").innerText =
+      "Error.";
+    console.error(err);
+  }
+});
+
 </script>
 
 </body>
