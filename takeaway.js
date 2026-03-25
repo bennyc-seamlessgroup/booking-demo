@@ -400,7 +400,7 @@ els.payBtn.addEventListener("click", async () => {
   const pickupNumber = generatePickupNumber();
 
   try {
-    await fetch("https://YOUR_N8N_URL/webhook/takeaway-submit", {
+    await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/takeaway-submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
