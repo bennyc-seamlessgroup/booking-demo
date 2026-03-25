@@ -165,10 +165,26 @@ function showScreen(name) {
   els.payingScreen.classList.add("hidden");
   els.successScreen.classList.add("hidden");
 
-  if (name === "menu") els.menuScreen.classList.remove("hidden");
-  if (name === "cart") els.cartScreen.classList.remove("hidden");
-  if (name === "paying") els.payingScreen.classList.remove("hidden");
-  if (name === "success") els.successScreen.classList.remove("hidden");
+  // 👇 控制 header
+  if (name === "menu") {
+    toggleHeader(true);
+    els.menuScreen.classList.remove("hidden");
+  }
+
+  if (name === "cart") {
+    toggleHeader(false);
+    els.cartScreen.classList.remove("hidden");
+  }
+
+  if (name === "paying") {
+    toggleHeader(false);
+    els.payingScreen.classList.remove("hidden");
+  }
+
+  if (name === "success") {
+    toggleHeader(false);
+    els.successScreen.classList.remove("hidden");
+  }
 }
 
 function renderHeader() {
@@ -182,6 +198,13 @@ function renderHeader() {
     els.desc.textContent = "";
     return;
   }
+
+  function toggleHeader(show) {
+  const hero = document.getElementById("heroSection");
+  if (!hero) return;
+
+  hero.style.display = show ? "block" : "none";
+}
 
   els.name.textContent =
     currentLang === "zh"
