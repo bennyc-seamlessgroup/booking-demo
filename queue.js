@@ -217,14 +217,53 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   els.joinQueueBtn.addEventListener("click", () => {
-    const selectedType = els.queueType.value;
-    const queueTypeLabel = els.queueType.options[els.queueType.selectedIndex].text;
-    const ticketNumber = generateTicketNumber();
-    const ahead = queueData.waiting;
-    const waitMinutes = ahead * 3 + randBetween(0, 5);
+  const selectedType = els.queueType.value;
+  const queueTypeLabel = els.queueType.options[els.queueType.selectedIndex].text;
+  const ticketNumber = generateTicketNumber();
+  const ahead = queueData.waiting;
+  const waitMinutes = ahead * 3 + randBetween(0, 5);
 
-    showQueueSuccess(ticketNumber, ahead, waitMinutes, queueTypeLabel);
-  });
+  fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/queue-submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      phone,
+      lang: currentLang,
+      restaurant_id: rid,
+      restaurant_name:
+        currentLang === "zh"
+          ? restaurant.name
+          : (restaurant.en_name || restaurant.name),
+      restaurant_name_zh: restaurant.name || "",
+      restaurant_name_en: restaurant.en_name || restaurant.name || "",
+      area:
+        currentLang === "zh"
+          ? (restaurant.area || "")
+          : (restaurant.area_en || restaurant.area || ""),
+      address_map: restaurant.map || "",
+      queue_type: selectedType,
+      queue_type_label: queueTypeLabel,
+      ticket_number: ticketNumber,
+      groups_ahead: ahead,
+      estimated_wait: waitMinutes
+    })
+  })
+    .then(async (res) => {
+      try {
+        const result = await res.json();
+        console.log("queue webhook result:", result);
+      } catch (e) {
+        console.log("Queue webhook returned non-JSON");
+      }
+    })
+    .catch((e) => {
+      console.log("Queue webhook error", e);
+    });
+
+  showQueueSuccess(ticketNumber, ahead, waitMinutes, queueTypeLabel);
+});
 
   els.doneBtn.addEventListener("click", () => {
     els.queueSuccessScreen.classList.add("hidden");
