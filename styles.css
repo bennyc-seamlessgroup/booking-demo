@@ -611,3 +611,7 @@ textarea:focus {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.hidden-hero {
+  display: none !important;
+}
