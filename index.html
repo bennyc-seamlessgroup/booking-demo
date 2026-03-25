@@ -33,41 +33,74 @@
   <p id="result" style="margin-top:20px;color:green;"></p>
 
   <script>
-    // 🔥 dummy data（你可以之後換 API）
-    const data = {
-      CB01: {
-        name: "Ho Hung Kee",
-        area: "Causeway Bay",
-        cuisine: "Cantonese"
-      },
-      FH01: {
-        name: "Fisholic",
-        area: "Fortress Hill",
-        cuisine: "Fusion"
-      }
+  const data = {
+    CB01: {
+      name: "Ho Hung Kee",
+      area: "Causeway Bay",
+      cuisine: "Cantonese"
+    },
+    FH01: {
+      name: "Fisholic",
+      area: "Fortress Hill",
+      cuisine: "Fusion"
+    }
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const rid = params.get("rid");
+
+  const r = data[rid];
+
+  if (r) {
+    document.getElementById("name").innerText = r.name;
+    document.getElementById("info").innerText =
+      `${r.area} | ${r.cuisine}`;
+  } else {
+    document.getElementById("name").innerText = "Restaurant not found";
+  }
+
+  document.getElementById("form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const inputs = this.querySelectorAll("input");
+
+    const payload = {
+      restaurant_id: rid,
+      restaurant_name: r ? r.name : "",
+      area: r ? r.area : "",
+      cuisine: r ? r.cuisine : "",
+      booking_date: inputs[0].value,
+      booking_time: inputs[1].value,
+      party_size: inputs[2].value,
+      customer_name: inputs[3].value,
+      customer_phone: inputs[4].value
     };
 
-    // 讀 rid
-    const params = new URLSearchParams(window.location.search);
-    const rid = params.get("rid");
+    try {
+      const res = await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/booking-submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
 
-    const r = data[rid];
+      const result = await res.json();
 
-    if (r) {
-      document.getElementById("name").innerText = r.name;
-      document.getElementById("info").innerText =
-        `${r.area} | ${r.cuisine}`;
-    } else {
-      document.getElementById("name").innerText = "Restaurant not found";
-    }
-
-    // submit
-    document.getElementById("form").addEventListener("submit", function(e) {
-      e.preventDefault();
+      if (result.success) {
+        document.getElementById("result").innerText =
+          "Booking submitted successfully!";
+      } else {
+        document.getElementById("result").innerText =
+          "Booking failed.";
+      }
+    } catch (err) {
       document.getElementById("result").innerText =
-        "Booking submitted (demo only)";
-    });
-  </script>
+        "Error submitting booking.";
+      console.error(err);
+    }
+  });
+</script>
 
 </body>
 </html>
