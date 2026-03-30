@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SesameEats｜食物評論</title>
+  <style>
+    :root {
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --text: #1f1b16;
+      --muted: #756b61;
+      --line: #e8ddd0;
+      --brand: #8b5e34;
+      --brand-dark: #6f4724;
+      --soft: #f8efe5;
+      --star: #ffb545;
+      --success-bg: #eefaf2;
+      --success-border: #cce9d4;
+      --shadow: 0 16px 42px rgba(45, 30, 15, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, #fff8f0 0, #f6f3ee 36%),
+        linear-gradient(180deg, #f6f2ec 0%, #f1ebe1 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", sans-serif;
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    .top {
+      background: linear-gradient(135deg, #9b6d41 0%, #6e4724 100%);
+      color: #fff;
+      border-radius: 28px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .top small {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.25);
+      font-weight: 700;
+      letter-spacing: .2px;
+    }
+
+    h1 {
+      margin: 14px 0 8px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .top p {
+      margin: 0;
+      color: rgba(255,255,255,.88);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0 20px;
+    }
+
+    .stat {
+      background: var(--card);
+      border: 1px solid rgba(139,94,52,.12);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .review-card, .final-card, .success {
+      background: var(--card);
+      border: 1px solid rgba(139,94,52,.12);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .review-card {
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .dish-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .dish-head h2, .final-card h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .tag {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-dark);
+      background: var(--soft);
+      border-radius: 999px;
+      padding: 7px 10px;
+      white-space: nowrap;
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    .section-label {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .stars {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .star {
+      border: 1px solid #e2d4c5;
+      background: #fff;
+      border-radius: 14px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-size: 20px;
+      line-height: 1;
+      transition: transform .15s, border-color .15s, background .15s;
+    }
+
+    .star:hover { transform: translateY(-1px); }
+    .star.active {
+      background: #fff8ec;
+      border-color: #ffc86f;
+      box-shadow: inset 0 0 0 1px rgba(255,181,69,.12);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      border: 1px solid #d9ccbd;
+      border-radius: 18px;
+      padding: 14px 15px;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    textarea:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(139,94,52,.10);
+    }
+
+    .final-card {
+      padding: 18px;
+      margin-top: 8px;
+    }
+
+    .success {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      background: var(--success-bg);
+      border-color: var(--success-border);
+    }
+
+    .success h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .success p {
+      margin: 0;
+      line-height: 1.6;
+      color: #27543a;
+    }
+
+    .actions {
+      position: sticky;
+      bottom: 0;
+      padding-top: 16px;
+      background: linear-gradient(180deg, rgba(246,243,238,0) 0%, rgba(246,243,238,0.86) 28%, rgba(246,243,238,1) 100%);
+    }
+
+    .submit {
+      width: 100%;
+      border: 0;
+      padding: 17px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(111,71,36,.22);
+    }
+
+    .mini {
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 24px; }
+      .summary { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="top">
+      <small>🍽️ 已驗證本次用餐</small>
+      <h1>評論你的餐點與整體體驗</h1>
+      <p><span id="welcomeName">Foodie</span>，請為本次已食用菜式逐一評分。完成後將模擬發放本次評論獎勵。</p>
+    </section>
+
+    <section class="summary">
+      <div class="stat">
+        <div class="label">餐廳</div>
+        <div class="value">漁舍小館</div>
+      </div>
+      <div class="stat">
+        <div class="label">收據編號</div>
+        <div class="value" id="receiptId">SE-20260330-0182</div>
+      </div>
+      <div class="stat">
+        <div class="label">完成可獲</div>
+        <div class="value">18 $OSM</div>
+      </div>
+    </section>
+
+    <form id="reviewForm">
+      <section class="review-card" data-dish="dish1">
+        <div class="dish-head">
+          <div>
+            <h2>香蔥叉燒撈麵</h2>
+          </div>
+          <div class="tag">已點選菜式 1</div>
+        </div>
+        <div class="desc">鹹香叉燒配手工麵，重點可評價味道、麵身口感、份量與整體驚喜度。</div>
+        <div class="section-label">這道菜你會打幾多星？</div>
+        <div class="stars" data-target="dish1_rating"></div>
+        <input type="hidden" name="dish1_rating" id="dish1_rating" required />
+        <div class="section-label">留言</div>
+        <textarea name="dish1_comment" placeholder="例如：叉燒夠香，麵身彈牙，但口味可以再濃少少。"></textarea>
+      </section>
+
+      <section class="review-card" data-dish="dish2">
+        <div class="dish-head">
+          <div>
+            <h2>黃金蝦多士</h2>
+          </div>
+          <div class="tag">已點選菜式 2</div>
+        </div>
+        <div class="desc">可以分享外層脆度、蝦膠份量、油膩感、配醬與性價比。</div>
+        <div class="section-label">這道菜你會打幾多星？</div>
+        <div class="stars" data-target="dish2_rating"></div>
+        <input type="hidden" name="dish2_rating" id="dish2_rating" required />
+        <div class="section-label">留言</div>
+        <textarea name="dish2_comment" placeholder="例如：口感幾脆，蝦味夠，但如果熱少少上枱會更好。"></textarea>
+      </section>
+
+      <section class="final-card">
+        <h2>餐廳整體評價</h2>
+        <p class="desc">綜合食物、服務、環境與整體體驗，為這間餐廳留下你的總評。</p>
+        <div class="section-label">整體幾多星？</div>
+        <div class="stars" data-target="restaurant_rating"></div>
+        <input type="hidden" name="restaurant_rating" id="restaurant_rating" required />
+        <div class="section-label">整體評論</div>
+        <textarea name="restaurant_comment" placeholder="例如：出菜快，整體水準穩定，環境舒服，會再來。"></textarea>
+      </section>
+
+      <div class="success" id="successBox">
+        <h3>✅ 評論已提交</h3>
+        <p id="successText">你今次已完成評論，並獲得模擬獎勵 18 $OSM。之後可再接駁 Wallet 頁面顯示資產。</p>
+      </div>
+
+      <div class="actions">
+        <button class="submit" type="submit">提交評論並領取模擬 $OSM</button>
+        <div class="mini">目前為 GitHub 靜態頁 dummy flow，按提交後只會顯示成功訊息，不會真的寫入資料庫。</div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function createStars(container) {
+      const targetId = container.getAttribute('data-target');
+      const targetInput = document.getElementById(targetId);
+
+      for (let i = 1; i <= 5; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'star';
+        btn.dataset.value = i;
+        btn.setAttribute('aria-label', `${i} 星`);
+        btn.textContent = '★';
+
+        btn.addEventListener('click', () => {
+          targetInput.value = i;
+          [...container.children].forEach((el, idx) => {
+            el.classList.toggle('active', idx < i);
+            el.style.color = idx < i ? 'var(--star)' : '#c7baab';
+          });
+        });
+
+        btn.style.color = '#c7baab';
+        container.appendChild(btn);
+      }
+    }
+
+    document.querySelectorAll('.stars').forEach(createStars);
+
+    const params = new URLSearchParams(window.location.search);
+    const storedName = localStorage.getItem('sesame_user_name') || 'Foodie';
+    const name = params.get('name') || storedName;
+    const receipt = params.get('receipt') || 'SE-20260330-0182';
+    const phone = params.get('phone') || localStorage.getItem('sesame_user_phone') || '';
+
+    document.getElementById('welcomeName').textContent = name;
+    document.getElementById('receiptId').textContent = receipt;
+
+    document.getElementById('reviewForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const required = ['dish1_rating', 'dish2_rating', 'restaurant_rating'];
+      const missing = required.some(id => !document.getElementById(id).value);
+      if (missing) {
+        alert('請先為兩道菜及餐廳整體評分。');
+        return;
+      }
+
+      const successBox = document.getElementById('successBox');
+      const successText = document.getElementById('successText');
+      successText.textContent = `${name}（${phone || '未填電話'}）已完成本次評論。模擬獎勵：18 $OSM，收據編號：${receipt}。下一步可再接 Wallet 頁面顯示餘額與交易紀錄。`;
+      successBox.style.display = 'block';
+      successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  </script>
+</body>
+</html>

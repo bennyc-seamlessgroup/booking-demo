@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SesameEats｜收據驗證登入</title>
+  <style>
+    :root {
+      --bg: #f6f3ee;
+      --card: #ffffff;
+      --text: #1f1b16;
+      --muted: #756b61;
+      --line: #e7ddd1;
+      --brand: #8b5e34;
+      --brand-dark: #6f4724;
+      --soft: #f1e5d8;
+      --success: #1d7a46;
+      --shadow: 0 14px 40px rgba(45, 30, 15, 0.08);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", sans-serif;
+      background:
+        radial-gradient(circle at top right, #fff8ef 0, #f6f3ee 38%),
+        linear-gradient(180deg, #f8f5ef 0%, #f2ece3 100%);
+      color: var(--text);
+    }
+
+    .wrap {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(139,94,52,.12);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero {
+      padding: 28px 24px 22px;
+      background: linear-gradient(135deg, #9b6d41 0%, #6e4724 100%);
+      color: white;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.95);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+
+    h1 {
+      margin: 18px 0 8px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgba(255,255,255,.88);
+    }
+
+    .body {
+      padding: 22px;
+    }
+
+    .info-box {
+      display: grid;
+      gap: 10px;
+      background: #fcf8f2;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 18px;
+    }
+
+    .info-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .info-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--success);
+      background: #ebfff3;
+      border: 1px solid #ccefd9;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .meta {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #d9ccbd;
+      background: #fff;
+      border-radius: 16px;
+      padding: 15px 16px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 4px rgba(139,94,52,.10);
+    }
+
+    .helper {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: -2px;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    .checkbox input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      accent-color: var(--brand);
+    }
+
+    .cta {
+      border: 0;
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 12px 24px rgba(111,71,36,.22);
+    }
+
+    .alt {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .step-no {
+      flex: 0 0 28px;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--soft);
+      color: var(--brand-dark);
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 520px) {
+      .wrap { padding: 14px; }
+      .hero { padding: 24px 18px 20px; }
+      .body { padding: 18px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="phone">
+      <div class="card">
+        <section class="hero">
+          <div class="badge">🧾 收據驗證回饋</div>
+          <h1>登入 SesameEats<br>開始寫食評賺 $OSM</h1>
+          <p>你剛完成用餐。輸入 WhatsApp 號碼後，即可進入本次訂單的食物評分頁，完成評論可獲得獎勵。</p>
+        </section>
+
+        <section class="body">
+          <div class="info-box">
+            <div class="info-top">
+              <div class="info-title">漁舍小館｜已驗證收據</div>
+              <div class="pill">可獲 18 $OSM</div>
+            </div>
+            <div class="meta">
+              <div>單號：SE-20260330-0182</div>
+              <div>用餐時間：2026-03-30 19:42</div>
+              <div>本次可評論菜式：香蔥叉燒撈麵、黃金蝦多士</div>
+            </div>
+          </div>
+
+          <form id="signupForm">
+            <div class="field">
+              <label for="phone">WhatsApp 電話號碼</label>
+              <input id="phone" name="phone" type="tel" placeholder="例如：9123 4567 / +852 9123 4567" required />
+              <div class="helper">用這個號碼建立／登入 SesameEats 帳戶，之後你可在 WhatsApp 與 App 內同步記錄。</div>
+            </div>
+
+            <div class="field">
+              <label for="name">暱稱</label>
+              <input id="name" name="name" type="text" placeholder="例如：Foodie Benny" required />
+            </div>
+
+            <label class="checkbox">
+              <input type="checkbox" id="agree" required />
+              <span>我同意 SesameEats 儲存本次評論、獎勵紀錄及基本帳戶資料，用於發放 $OSM 及建立個人美食紀錄。</span>
+            </label>
+
+            <button class="cta" type="submit">登入／註冊並開始評論</button>
+            <div class="alt">之後可直接用同一個 WhatsApp 號碼快速登入。</div>
+          </form>
+
+          <div class="steps">
+            <div class="step">
+              <div class="step-no">1</div>
+              <div><b>綁定你的 WhatsApp</b><span>以收據上的驗證碼建立本次用餐紀錄，確保評論可信。</span></div>
+            </div>
+            <div class="step">
+              <div class="step-no">2</div>
+              <div><b>逐道菜評分</b><span>每道你食過的菜都可以獨立打星及留言，令推薦更準確。</span></div>
+            </div>
+            <div class="step">
+              <div class="step-no">3</div>
+              <div><b>獲得 $OSM 獎勵</b><span>完成餐廳整體評價後，即可看到本次模擬獎勵結果。</span></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('signupForm');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const phone = document.getElementById('phone').value.trim();
+      const name = document.getElementById('name').value.trim();
+      const agree = document.getElementById('agree').checked;
+
+      if (!phone || !name || !agree) {
+        alert('請先完成所有欄位。');
+        return;
+      }
+
+      localStorage.setItem('sesame_user_phone', phone);
+      localStorage.setItem('sesame_user_name', name);
+
+      const params = new URLSearchParams({
+        phone,
+        name,
+        receipt: 'SE-20260330-0182'
+      });
+
+      window.location.href = `./sesameeats-food-review.html?${params.toString()}`;
+    });
+
+    const savedPhone = localStorage.getItem('sesame_user_phone');
+    const savedName = localStorage.getItem('sesame_user_name');
+    if (savedPhone) document.getElementById('phone').value = savedPhone;
+    if (savedName) document.getElementById('name').value = savedName;
+  </script>
+</body>
+</html>
