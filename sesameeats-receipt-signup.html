@@ -20,6 +20,7 @@
     }
 
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", sans-serif;
@@ -280,11 +281,6 @@
               <div class="helper">用這個號碼建立／登入 SesameEats 帳戶，之後你可在 WhatsApp 與 App 內同步記錄。</div>
             </div>
 
-            <div class="field">
-              <label for="name">暱稱</label>
-              <input id="name" name="name" type="text" placeholder="例如：Foodie Benny" required />
-            </div>
-
             <label class="checkbox">
               <input type="checkbox" id="agree" required />
               <span>我同意 SesameEats 儲存本次評論、獎勵紀錄及基本帳戶資料，用於發放 $OSM 及建立個人美食紀錄。</span>
@@ -320,20 +316,17 @@
       e.preventDefault();
 
       const phone = document.getElementById('phone').value.trim();
-      const name = document.getElementById('name').value.trim();
       const agree = document.getElementById('agree').checked;
 
-      if (!phone || !name || !agree) {
+      if (!phone || !agree) {
         alert('請先完成所有欄位。');
         return;
       }
 
       localStorage.setItem('sesame_user_phone', phone);
-      localStorage.setItem('sesame_user_name', name);
 
       const params = new URLSearchParams({
         phone,
-        name,
         receipt: 'SE-20260330-0182'
       });
 
@@ -341,9 +334,7 @@
     });
 
     const savedPhone = localStorage.getItem('sesame_user_phone');
-    const savedName = localStorage.getItem('sesame_user_name');
     if (savedPhone) document.getElementById('phone').value = savedPhone;
-    if (savedName) document.getElementById('name').value = savedName;
   </script>
 </body>
 </html>
