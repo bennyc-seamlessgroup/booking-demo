@@ -195,7 +195,7 @@ els.form.addEventListener("submit", async function (e) {
   };
 
   try {
-    const res = await fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/booking-submit", {
+    const res = await fetch("https://clip-cart-remote-computers.trycloudflare.com/webhook/booking-submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
