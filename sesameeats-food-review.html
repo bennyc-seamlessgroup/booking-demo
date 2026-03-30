@@ -247,7 +247,7 @@
     <section class="top">
       <small>🍽️ 已驗證本次用餐</small>
       <h1>評論你的餐點與整體體驗</h1>
-      <p><span id="welcomeName">Foodie</span>，請為本次已食用菜式逐一評分。完成後將模擬發放本次評論獎勵。</p>
+      <p><span id="welcomeName">Foodie</span>，請為本次已食用菜式逐一評分。完成後將發放本次評論獎勵。</p>
     </section>
 
     <section class="summary">
@@ -308,12 +308,12 @@
 
       <div class="success" id="successBox">
         <h3>✅ 評論已提交</h3>
-        <p id="successText">你今次已完成評論，並獲得模擬獎勵 18 $OSM。之後可再接駁 Wallet 頁面顯示資產。</p>
+        <p id="successText">你今次已完成評論，並獲得獎勵 18 $OSM。</p>
       </div>
 
       <div class="actions">
-        <button class="submit" type="submit">提交評論並領取模擬 $OSM</button>
-        <div class="mini">目前為 GitHub 靜態頁 dummy flow，按提交後只會顯示成功訊息，不會真的寫入資料庫。</div>
+        <button class="submit" type="submit">提交評論並領取 $OSM</button>
+        
       </div>
     </form>
   </div>
@@ -367,7 +367,7 @@
 
       const successBox = document.getElementById('successBox');
       const successText = document.getElementById('successText');
-      successText.textContent = `${name}（${phone || '未填電話'}）已完成本次評論。模擬獎勵：18 $OSM，收據編號：${receipt}。下一步可再接 Wallet 頁面顯示餘額與交易紀錄。`;
+      successText.textContent = `${name}（${phone || '未填電話'}）已完成本次評論。獎勵：18 $OSM，收據編號：${receipt}。`;
       successBox.style.display = 'block';
       successBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
