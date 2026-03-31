@@ -469,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = getTotal();
     const pickupNumber = generatePickupNumber();
 
-    fetch("https://bennyseamlessgroup.app.n8n.cloud/webhook/takeaway-submit", {
+    fetch("https://oval-ambien-coupons-gba.trycloudflare.com/webhook/takeaway-submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
