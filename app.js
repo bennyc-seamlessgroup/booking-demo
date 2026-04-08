@@ -195,8 +195,7 @@ els.form.addEventListener("submit", async function (e) {
   };
 
   try {
-    const res = await fetch("https://impose-stories-powerpoint-uni.trycloudflare.com/webhook-test/booking-submit
-", {
+    const res = await fetch("https://impose-stories-powerpoint-uni.trycloudflare.com/webhook/booking-submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
