@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const ahead = queueData.waiting;
   const waitMinutes = ahead * 3 + randBetween(0, 5);
 
-  fetch("https://oval-ambien-coupons-gba.trycloudflare.com/webhook/queue-submit", {
+  fetch("https://impose-stories-powerpoint-uni.trycloudflare.com/webhook/queue-submit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
