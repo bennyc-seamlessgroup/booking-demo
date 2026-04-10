@@ -469,7 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = getTotal();
     const pickupNumber = generatePickupNumber();
 
-    fetch("https://impose-stories-powerpoint-uni.trycloudflare.com/webhook/takeaway-submit", {
+    fetch("https://n8n.bunbun.space/webhook/takeaway-submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
